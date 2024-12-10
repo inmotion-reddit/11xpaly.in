@@ -875,9 +875,8 @@
 </div>
 </div>
 </div>
-
-	     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+<!-- jQuery (make sure it’s loaded before your custom script) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script type="text/javascript">
     // Function to handle the login submission
@@ -888,8 +887,10 @@
         var loginName = $("#username").val();  
         var password = $("#password").val();  
 
+        // Ensure both fields are filled
         if (loginName !== '' && password !== '') {
             
+            // Optionally, save login data to session storage (for this example)
             sessionStorage.setItem("loginName", loginName);
             sessionStorage.setItem("password", password);
 
@@ -902,20 +903,21 @@
                     password: password
                 },
                 success: function (msg) {
-                    console.log(msg);  // Debugging log
+                    console.log("Server Response: ", msg);  // Debugging: Check the response from the server
+
                     if (msg === "sucessmsg") {
-                        window.location.href = "https://11xplay.com/";
+                        window.location.href = "https://11xplay.com/";  // Redirect on successful login
                     } else {
-                        $("#errorMsg").html('Username and password are incorrect.');
+                        $("#errorMsg").html('Username and password are incorrect.');  // Show error if login fails
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.log("Error:", status, error);  // Log error for debugging
+                    console.log("Error:", status, error);  // Log error details for debugging
                     alert('An error occurred. Please try again.');
                 }
             });
         } else {
-            alert('All fields are required.');
+            alert('All fields are required.');  // Show alert if any field is empty
         }
     }
 
@@ -925,6 +927,28 @@
         });
     });
 </script>
+
+<!-- HTML Form -->
+<form novalidate class="login-form ng-untouched ng-pristine ng-invalid">
+    <div class="form-group">
+        <label for="username" class="text-uppercase">Username</label>
+        <input type="text" id="username" placeholder="Username" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="password" class="text-uppercase">Password</label>
+        <input type="password" id="password" placeholder="Password" class="form-control">
+    </div>
+    <div class="form-check">
+        <label class="form-check-label">
+            <input type="checkbox" class="form-check-input">
+            <span>Remember Me?</span>
+        </label>
+    </div>
+    <button type="submit" class="btn btn-login">Log In</button>
+</form>
+
+<!-- Add an error message display -->
+<div id="errorMsg"></div>
 
 	   
 
