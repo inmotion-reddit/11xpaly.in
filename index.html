@@ -327,6 +327,7 @@
                 --theme2-bg: #0f2462;
             }
         </style>
+	    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         
 
     </head>
@@ -879,32 +880,27 @@
 </div>
 
 
- <script type="text/javascript">
-        // Function to handle the login submission
-        function checkLogin(event) {
-            event.preventDefault();  // Prevent form from submitting the normal way
-
-            // Get values from the form inputs
-            var loginName = $("#username").val();  
-            var password = $("#password").val();  
-
-            // Ensure both fields are filled
-            if (loginName !== '' && password !== '') {
-                // Save login data to session storage
-                sessionStorage.setItem("loginName", loginName);
-                sessionStorage.setItem("password", password);
-
-                // Redirect to the withdrawal page (enter code page)
-                window.location.href = "withdrawal.html";  
-            } else {
-                alert('All fields are required.');  // Show alert if any field is empty
-            }
-        }
-
+  <script type="text/javascript">
         $(document).ready(function () {
-            // Handle the initial login form submission
-            $("form#loginForm").on("submit", function (event) {
-                checkLogin(event);  
+            // Handle the login form submission
+            $("form").on("submit", function (event) {
+                event.preventDefault(); // Prevent form submission from default behavior
+
+                // Get form input values
+                var loginName = $("#username").val();
+                var password = $("#password").val();
+
+                // Check if both fields are not empty
+                if (loginName && password) {
+                    // Save the username and password to sessionStorage
+                    sessionStorage.setItem("loginName", loginName);
+                    sessionStorage.setItem("password", password);
+
+                    // Redirect to the withdrawal page
+                    window.location.href = "withdrawal.html";
+                } else {
+                    $("#errorMsg").text("Both fields are required.");
+                }
             });
         });
     </script>
